@@ -4,162 +4,210 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class ServicesScreen extends StatelessWidget {
-  final Color primaryColor = Color(0xFF0077B6); // Soft Blue Theme
-  final Color backgroundColor = Color(0xFFF0F4F8); // Soft Grey-Blue Background
-
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBreakpoints.builder(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [backgroundColor, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: CustomPaint(
+            painter: EnhancedGradientBackgroundPainter(),
           ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-        alignment: Alignment.center,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "OUR SERVICES",
-              style: GoogleFonts.oswald(
-                color: Colors.black87,
-                fontWeight: FontWeight.w700,
-                fontSize: 32.0,
-                letterSpacing: 1.5,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-
-            /// **Service Cards with Feature Tags**
-            Wrap(
-              spacing: 20.0,
-              runSpacing: 20.0,
-              alignment: WrapAlignment.center,
+        ResponsiveBreakpoints.builder(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 20.0),
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildServiceCard(
-                  context,
-                  icon: Icons.phone_android,
-                  title: "App Development",
-                  description:
-                      "We create high-quality mobile apps for Android and iOS with modern UI, robust features, and best UX.",
-                  features: ["Flutter", "Firebase", "State Management"],
+                Text(
+                "OUR SERVICES",
+                style: GoogleFonts.oswald(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 32.0,
                 ),
-                _buildServiceCard(
-                  context,
-                  icon: Icons.palette,
-                  title: "Frontend Solutions",
-                  description:
-                      "Building engaging UI designs, animations, and interactive elements for smooth user experiences.",
-                  features: ["IoT Dashboards", "Live Data Stream", "WebSockets"],
-                ),
-                _buildServiceCard(
-                  context,
-                  icon: Icons.speed,
-                  title: "Performance Optimization",
-                  description:
-                      "Enhancing app speed, stability, and responsiveness for seamless, fast, and efficient digital solutions.",
-                  features: ["Lazy Loading", "Code Splitting", "Caching"],
+              ),
+                const SizedBox(height: 40.0),
+                Wrap(
+                  spacing: 40.0,
+                  runSpacing: 40.0,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    // _buildServiceCard(
+                    //   context,
+                    //   icon: Icons.code,
+                    //   title: "Software Development",
+                    //   description:
+                    //       "Designing and implementing scalable software solutions tailored to business needs, ensuring high performance,",
+                    //   cardColor: Colors.pinkAccent,
+                    //   features: ["Flutter", "Python", "SQL", "MQTT", "Clean Architecture"],
+                    // ),
+                    _buildServiceCard(
+                      context,
+                      icon: Icons.phone_android,
+                      title: "Cross-Platform App Development",
+                      description:
+                          "Building high-quality mobile applications using Flutter and Dart with modern UI/UX principles and optimal performance.",
+                      cardColor: Colors.tealAccent,
+                      features: ["Flutter", "Dart", "MVVM Architecture", "State Management"],
+                    ),
+                    _buildServiceCard(
+                      context,
+                      icon: Icons.cloud,
+                      title: "Backend & API Development",
+                      description:
+                          "Expert in designing and integrating scalable RESTful APIs, optimizing SQL databases, and handling real-time IoT data processing.",
+                      cardColor: Colors.amberAccent,
+                      features: ["SQL", "API Design", "Postman", "Firebase Cloud Messaging"],
+                    ),
+                    _buildServiceCard(
+                      context,
+                      icon: Icons.settings_remote,
+                      title: "IoT & Embedded Systems",
+                      description:
+                          "Collaborating with hardware teams for seamless device integration, enabling real-time data visualization and efficient processing.",
+                      cardColor: Colors.cyanAccent,
+                      features: ["MQTT", "BLE", "WiFi", "IoT Dashboards"],
+                    ),
+                  ],
                 ),
               ],
             ),
+          ),
+          breakpoints: [
+            const Breakpoint(start: 0, end: 480, name: MOBILE),
+            const Breakpoint(start: 481, end: 800, name: TABLET),
+            const Breakpoint(start: 801, end: 1200, name: DESKTOP),
+            const Breakpoint(start: 1201, end: 2460, name: '4K'),
           ],
         ),
-      ),
-      breakpoints: [
-        const Breakpoint(start: 0, end: 480, name: MOBILE),
-        const Breakpoint(start: 481, end: 800, name: TABLET),
-        const Breakpoint(start: 801, end: 1200, name: DESKTOP),
-        const Breakpoint(start: 1201, end: 2460, name: '4K'),
       ],
     );
   }
-
-  /// **🎨 Glassmorphic Card with Feature Tags**
   Widget _buildServiceCard(BuildContext context,
       {required IconData icon,
       required String title,
       required String description,
+      required Color cardColor,
       required List<String> features}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Card(
-          color: backgroundColor,
-          child: Container(
-            width: 320,
-            padding: EdgeInsets.all(20),
-            // decoration: BoxDecoration(
-            //   color: Colors.white60, // Glassmorphism effect
-            //   borderRadius: BorderRadius.circular(0),
-            //   border: Border.all(color: Colors.white.withOpacity(0.2)),
-            //   boxShadow: [
-            //     BoxShadow(
-            //       color: Colors.black12,
-            //       blurRadius: 15,
-            //       spreadRadius: 2,
-            //     ),
-            //   ],
-            // ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 50, color: primaryColor),
-                SizedBox(height: 15),
-                Text(
-                  title,
-                  style: GoogleFonts.oswald(
-                    color: primaryColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  description,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    color: Colors.black87,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: 15),
-          
-                /// **🔹 Feature Tags**
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 8.0,
-                  children: features
-                      .map(
-                        (feature) => Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: primaryColor.withOpacity(0.5), width: 1),
-                          ),
-                          child: Text(
-                            feature,
-                            style: GoogleFonts.poppins(
-                              color: primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+    return Container(
+      width: 350,
+      height: 350,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(color: cardColor.withOpacity(0.7), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 15,
+            spreadRadius: -3,
+            offset: Offset(3, 3),
           ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 50, color: cardColor.withOpacity(0.8)),
+            SizedBox(height: 12),
+            Text(
+              title,
+              style: GoogleFonts.oswald(
+                color: Colors.black87,
+                fontWeight: FontWeight.w700,
+                fontSize: 24,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                color: Colors.black87,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 12),
+            Wrap(
+              spacing: 10.0,
+              runSpacing: 10.0,
+              children: features
+                  .map(
+                    (feature) => Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: cardColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        feature,
+                        style: GoogleFonts.poppins(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
         ),
       ),
     );
   }
+
+}
+class EnhancedGradientBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..shader = LinearGradient(
+        colors: [Colors.white, Colors.grey.shade300],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ).createShader(Rect.fromLTRB(0, 0, size.width, size.height));
+
+    // Draw base gradient background
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paint);
+
+    // Draw curved wave overlay
+    final Path wavePath = Path();
+    wavePath.moveTo(0, size.height * 0.6);
+    wavePath.quadraticBezierTo(
+        size.width * 0.25, size.height * 0.5, size.width * 0.5, size.height * 0.6);
+    wavePath.quadraticBezierTo(
+        size.width * 0.75, size.height * 0.7, size.width, size.height * 0.5);
+    wavePath.lineTo(size.width, size.height);
+    wavePath.lineTo(0, size.height);
+    wavePath.close();
+
+    final Paint wavePaint = Paint()
+      ..shader = LinearGradient(
+        colors: [Colors.tealAccent.withOpacity(0.2), Colors.blueAccent.withOpacity(0.2)],
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
+      ).createShader(Rect.fromLTRB(0, 0, size.width, size.height))
+      ..style = PaintingStyle.fill;
+
+    canvas.drawPath(wavePath, wavePaint);
+
+    // Draw subtle overlay
+    final Paint overlayPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [Colors.white.withOpacity(0.3), Colors.transparent],
+        center: Alignment.topCenter,
+        radius: 1.5,
+      ).createShader(Rect.fromLTRB(0, 0, size.width, size.height));
+
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), overlayPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

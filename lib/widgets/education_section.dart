@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -15,56 +16,23 @@ class AboutScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// **About Me Section**
-              Text(
-                "MY STORY",
-                style: GoogleFonts.oswald(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 32.0,
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Text(
+              _buildSectionTitle("MY STORY"),
+              _buildDescription(
                 "I am a results-driven Software Development Engineer with expertise in Flutter, Dart, Python, and SQL. "
                 "I specialize in designing scalable software solutions, integrating IoT systems, and optimizing backend performance. "
                 "Passionate about technology and solving real-world problems through efficient and maintainable code.",
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 16.0,
-                  height: 1.5,
-                ),
               ),
               const SizedBox(height: 40.0),
-
+    
               /// **Experience Section**
-              Text(
-                "WORK EXPERIENCE",
-                style: GoogleFonts.oswald(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 28.0,
-                ),
-              ),
+              _buildSectionTitle("WORK EXPERIENCE"),
               const SizedBox(height: 20.0),
-
-              /// **Work Experience List**
-              _buildSection(experienceList),
-
-              const SizedBox(height: 50.0),
-
+              _buildStepper(experienceList.reversed.toList()),
+    
               /// **Education Section**
-              Text(
-                "EDUCATION",
-                style: GoogleFonts.oswald(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 28.0,
-                ),
-              ),
+              _buildSectionTitle("EDUCATION"),
               const SizedBox(height: 20.0),
-
-              /// **Education List**
-              _buildSection(educationList),
+              _buildEducationCards(educationList),
             ],
           ),
         ),
@@ -78,55 +46,131 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  /// **Reusable Section for Work Experience & Education**
-  Widget _buildSection(List<SectionItem> sectionItems) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        bool isMobile = ResponsiveBreakpoints.of(context).smallerThan(TABLET);
-        return Wrap(
-          spacing: isMobile ? 0 : 20.0,
-          runSpacing: 20.0,
-          children: sectionItems.map(
-            (item) {
-              return Container(
-               
-                width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
-               
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.title,
-                      style: GoogleFonts.oswald(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                    Text(
-                      item.period,
-                      style: GoogleFonts.oswald(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    const SizedBox(height: 5.0),
-                    Text(
-                      item.description,
-                      style: TextStyle(
-                        color: Colors.black,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                  ],
+  /// **Section Title**
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.oswald(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+        fontSize: 32.0,
+      ),
+    );
+  }
+
+  /// **Description Text**
+  Widget _buildDescription(String text) {
+    return Text(
+      text,
+      style: GoogleFonts.poppins(
+        color: Colors.black87,
+        fontSize: 16.0,
+        height: 1.5,
+      ),
+    );
+  }
+
+  /// **Stepper for Work Experience**
+  Widget _buildStepper(List<SectionItem> sectionItems) {
+    return Stepper(
+      elevation: 5,
+      physics: ClampingScrollPhysics(),
+      currentStep: sectionItems.length - 1,
+      controlsBuilder: (context, _) => SizedBox.shrink(),
+      steps: sectionItems.map((item) {
+        return Step(
+          title: Text(
+            item.title,
+            style: GoogleFonts.oswald(
+              color: Colors.black87,
+              fontWeight: FontWeight.w600,
+              fontSize: 20.0,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.period,
+                style: GoogleFonts.poppins(
+                  color: Colors.black54,
+                  fontSize: 16.0,
                 ),
-              );
-            },
-          ).toList(),
+              ),
+              const SizedBox(height: 5.0),
+              Text(
+                item.description,
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 14.0,
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox.shrink(),
+          isActive: true,
         );
-      },
+      }).toList(),
+    );
+  }
+
+  /// **New Card Design for Education**
+  Widget _buildEducationCards(List<SectionItem> sectionItems) {
+    return Wrap(
+      spacing: 20.0,
+      runSpacing: 20.0,
+      children: sectionItems.map(
+        (item) {
+          return Container(
+            width: 400,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white.withOpacity(0.9),
+              border: Border.all(color: Colors.blueAccent.withOpacity(0.5), width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 15,
+                  spreadRadius: -3,
+                  offset: Offset(3, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: GoogleFonts.oswald(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.0,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  item.period,
+                  style: GoogleFonts.poppins(
+                    color: Colors.black54,
+                    fontSize: 16.0,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  item.description,
+                  style: GoogleFonts.poppins(
+                    color: Colors.black87,
+                    fontSize: 14.0,
+                    height: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ).toList(),
     );
   }
 }
@@ -148,15 +192,20 @@ class SectionItem {
 final List<SectionItem> experienceList = [
   SectionItem(
     title: "Software Development Engineer",
-    description: "Developed scalable software and IoT solutions, integrating real-time device data.",
+    description: "Developed scalable software solutions to meet business needs, ensuring high performance and maintainability.\n"
+        "Integrated hardware components for seamless data processing and IoT connectivity.\n"
+        "Implemented full-stack IoT solutions with backend scalability and responsive frontends.\n",
     period: "Jan 2025 – Present",
   ),
   SectionItem(
     title: "Application Engineer",
-    description: "Built high-performance Flutter apps with 5,000+ downloads, optimized backend architecture.",
+    description: "Built high-performance cross-platform applications with Flutter, surpassing 5,000+ downloads.\n"
+        "Optimized SQL queries and backend processes, reducing response times significantly.\n"
+        "Designed scalable database architectures to handle concurrent users and heavy loads.\n",
     period: "Jan 2023 – Jan 2025",
   ),
 ];
+
 
 /// **Education List**
 final List<SectionItem> educationList = [

@@ -95,7 +95,7 @@ class SkillHeader extends StatelessWidget {
         Text(
           "Below are my core technical skills. More will be added as I continue learning and improving.",
           style: TextStyle(
-            color: kCaptionColor,
+            
             height: 1.5,
             fontSize: 16.0,
           ),

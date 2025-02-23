@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-const Color kPrimaryColor = Color.fromRGBO(21, 181, 114, 1);
-const Color kBackgroundColor = Color.fromRGBO(7, 17, 26, 1);
-const Color kDangerColor = Color.fromRGBO(249, 77, 30, 1);
-const Color kCaptionColor = Color.fromRGBO(166, 177, 187, 1);
+final Color primaryColor = Color(0xFF0077B6); // Soft Blue Theme
+  final Color backgroundColor = Color(0xFFF0F4F8); // Soft Grey-Blue Background
 
 // Lets replace all static sizes
 const double kDesktopMaxWidth = 1000.0;

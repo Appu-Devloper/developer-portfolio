@@ -1,6 +1,6 @@
-import 'package:developer_portfolio/widgets/ios_app_ad.dart';
+import 'package:developer_portfolio/widgets/work_section.dart';
 import 'package:flutter/material.dart';
-import '../widgets/carousel.dart';
+import '../widgets/home_section.dart';
 import '../widgets/education_section.dart';
 import '../widgets/services.dart';
 import '/utils/globals.dart';

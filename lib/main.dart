@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Flutter Portfolio",
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       darkTheme: Theme.of(context).copyWith(
         platform: TargetPlatform.android,
-        scaffoldBackgroundColor: kBackgroundColor,
-        primaryColor: kPrimaryColor,
-        canvasColor: kBackgroundColor,
+        scaffoldBackgroundColor: backgroundColor,
+        primaryColor: primaryColor,
+        canvasColor: backgroundColor,
         textTheme: GoogleFonts.latoTextTheme(),
       ), builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
