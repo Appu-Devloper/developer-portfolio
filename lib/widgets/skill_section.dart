@@ -25,7 +25,7 @@ class SkillSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      
       child: ResponsiveWidget(
         desktop: _buildUi(context, kDesktopMaxWidth),
         tablet: _buildUi(context, kTabletMaxWidth),

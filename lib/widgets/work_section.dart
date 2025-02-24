@@ -58,98 +58,98 @@ class _IosAppAdState extends State<IosAppAd> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBreakpoints.builder(
-      breakpoints: [
-        const Breakpoint(start: 0, end: 480, name: MOBILE),
-        const Breakpoint(start: 481, end: 800, name: TABLET),
-        const Breakpoint(start: 801, end: 1200, name: DESKTOP),
-        const Breakpoint(start: 1201, end: 2460, name: '4K'),
-      ],
-      child: Center(
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-          alignment: Alignment.center,
-          child: LayoutBuilder(
-        builder: (context, constraints) {
-          bool isMobile = ResponsiveBreakpoints.of(context).smallerThan(DESKTOP);
-          return Center(
-            child: Wrap(alignment: WrapAlignment.center,crossAxisAlignment: WrapCrossAlignment.center,
+    return Center(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+        alignment: Alignment.center,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            bool isMobile = ResponsiveBreakpoints.of(context).smallerThan(DESKTOP);
+            return Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               spacing: isMobile ? 0 : 20.0,
               runSpacing: 20.0,
-              children: projects.map(
-                (item) =>
-                   Container(
-                   
-                    width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
-                    child: _buildProjectDetails(item))).toList(),
-                ),
-          );},
-            ),
-          ),
+              children: projects
+                  .map((item) => _buildProjectBox(item, constraints, isMobile))
+                  .toList(),
+            );
+          },
+        ),
       ),
-      );
-    
+    );
   }
 
-  Widget _buildProjectDetails(ProjectItem project) {
-    return  Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              project.title.toUpperCase(),
-              style: GoogleFonts.oswald(
-                color: primaryColor,
-                fontWeight: FontWeight.w900,
-                fontSize: 22.0,
-              ),
+  /// 🟦 **Creates a Boxed Section for Each Card**
+  Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
+    return Container(
+      width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 12,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // **Background Pattern inside Box**
+          Positioned.fill(child: CustomPaint(painter: CardBackgroundPainter())),
+          _buildProjectCard(project),
+        ],
+      ),
+    );
+  }
+
+  /// 🟩 **Project Card with Glassmorphism & Light Colors**
+  Widget _buildProjectCard(ProjectItem project) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.white.withOpacity(0.9), Colors.blue.shade50],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            project.title.toUpperCase(),
+            style: GoogleFonts.oswald(
+              color: Colors.black87,
+              fontWeight: FontWeight.w900,
+              fontSize: 22.0,
             ),
-            const SizedBox(height: 10.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: project.features
-                  .map((feature) => _buildFeatureItem(feature))
+          ),
+          const SizedBox(height: 10.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: project.features
+                .map((feature) => _buildFeatureItem(feature))
+                .toList(),
+          ),
+          const SizedBox(height: 20.0),
+          if (!project.isPrivate)
+            Wrap(
+              spacing: 10.0,
+              children: project.buttons
+                  .map((buttonText) => _buildButton(text: buttonText))
                   .toList(),
-            ),
-            const SizedBox(height: 20.0),
-            if (!project.isPrivate)
-              Wrap(
-                spacing: 10.0,
-                children: project.buttons
-                    .map((buttonText) => _buildButton(
-                          text: buttonText,
-                          color: primaryColor,
-                          textColor: Colors.white,
-                        ))
-                    .toList(),
-              )
-            else
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red, width: 1),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.lock, color: Colors.red, size: 18),
-                    SizedBox(width: 8),
-                    Text(
-                      "Enterprise Solution",
-                      style: GoogleFonts.poppins(
-                        color: Colors.red,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        
-      
+            )
+          else
+            _buildPrivateTag(),
+        ],
+      ),
     );
   }
 
@@ -158,7 +158,7 @@ class _IosAppAdState extends State<IosAppAd> {
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
-          Icon(Icons.check_circle, color: primaryColor, size: 16.0),
+          Icon(Icons.check_circle, color: Colors.blueAccent, size: 16.0),
           const SizedBox(width: 8.0),
           Expanded(
             child: Text(
@@ -175,30 +175,65 @@ class _IosAppAdState extends State<IosAppAd> {
     );
   }
 
-  Widget _buildButton({
-    required String text,
-    required Color color,
-    required Color textColor,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-       border: Border.all(color: color),
-        borderRadius: BorderRadius.circular(8.0),
+  Widget _buildButton({required String text}) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       ),
-      child: TextButton(
-        onPressed: () {},
-        child: Text(
-          text,
-          style: GoogleFonts.poppins(
-            color: color,
-            fontSize: 13.0,
-            fontWeight: FontWeight.bold,
-          ),
+      onPressed: () {},
+      child: Text(
+        text,
+        style: GoogleFonts.poppins(
+          fontSize: 13.0,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
+
+  Widget _buildPrivateTag() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.red.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.red, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.lock, color: Colors.red, size: 18),
+          SizedBox(width: 8),
+          Text(
+            "Enterprise Solution",
+            style: GoogleFonts.poppins(
+              color: Colors.red,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+/// 🎨 **Light Pattern Inside Each Box**
+class CardBackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()..color = Colors.blue.withOpacity(0.1);
+    canvas.drawCircle(Offset(size.width * 0.2, size.height * 0.2), 50, paint);
+    canvas.drawCircle(Offset(size.width * 0.8, size.height * 0.8), 70, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 
 class ProjectItem {
   final String title;

@@ -6,116 +6,162 @@ import 'package:responsive_framework/responsive_framework.dart';
 class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBreakpoints.builder(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-        alignment: Alignment.center,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 1200),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// **About Me Section**
-              _buildSectionTitle("MY STORY"),
-              _buildDescription(
-                "I am a results-driven Software Development Engineer with expertise in Flutter, Dart, Python, and SQL. "
-                "I specialize in designing scalable software solutions, integrating IoT systems, and optimizing backend performance. "
-                "Passionate about technology and solving real-world problems through efficient and maintainable code.",
-              ),
-              const SizedBox(height: 40.0),
-    
-              /// **Experience Section**
-              _buildSectionTitle("WORK EXPERIENCE"),
-              const SizedBox(height: 20.0),
-              _buildStepper(experienceList.reversed.toList()),
-    
-              /// **Education Section**
-              _buildSectionTitle("EDUCATION"),
-              const SizedBox(height: 20.0),
-              _buildEducationCards(educationList),
-            ],
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: CustomPaint(
+            painter: BackgroundPainter(), // 🎨 Overlapping rectangles applied globally
           ),
         ),
-      ),
-      breakpoints: [
-        const Breakpoint(start: 0, end: 480, name: MOBILE),
-        const Breakpoint(start: 481, end: 800, name: TABLET),
-        const Breakpoint(start: 801, end: 1200, name: DESKTOP),
-        const Breakpoint(start: 1201, end: 2460, name: '4K'),
+        Container(
+          padding: const EdgeInsets.symmetric( horizontal: 20.0),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 1200),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle("MY STORY"),
+                  _buildDescription(
+                    "I am a results-driven Software Development Engineer with expertise in Flutter, Dart, Python, and SQL. "
+                    "I specialize in designing scalable software solutions, integrating IoT systems, and optimizing backend performance. "
+                    "Passionate about technology and solving real-world problems through efficient and maintainable code.",
+                  ),
+                  const SizedBox(height: 50.0),
+
+                  _buildSectionTitle("WORK EXPERIENCE"),
+                  const SizedBox(height: 20.0),
+                  _buildTimeline(experienceList.reversed.toList()),
+
+                  _buildSectionTitle("EDUCATION"),
+                  const SizedBox(height: 20.0),
+                  _buildEducationCards(educationList),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  /// **Section Title**
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
       style: GoogleFonts.oswald(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
+        color: Colors.black87,
+        fontWeight: FontWeight.w700,
         fontSize: 32.0,
+        letterSpacing: 1.2,
       ),
     );
   }
 
-  /// **Description Text**
   Widget _buildDescription(String text) {
     return Text(
       text,
       style: GoogleFonts.poppins(
         color: Colors.black87,
         fontSize: 16.0,
-        height: 1.5,
+        height: 1.6,
       ),
     );
   }
 
-  /// **Stepper for Work Experience**
-  Widget _buildStepper(List<SectionItem> sectionItems) {
-    return Stepper(
-      elevation: 5,
-      physics: ClampingScrollPhysics(),
-      currentStep: sectionItems.length - 1,
-      controlsBuilder: (context, _) => SizedBox.shrink(),
-      steps: sectionItems.map((item) {
-        return Step(
-          title: Text(
-            item.title,
-            style: GoogleFonts.oswald(
-              color: Colors.black87,
-              fontWeight: FontWeight.w600,
-              fontSize: 20.0,
-            ),
-          ),
-          subtitle: Column(
+  /// **Modern Work Experience Timeline**
+  Widget _buildTimeline(List<SectionItem> sectionItems) {
+    return Column(
+      children: sectionItems.asMap().entries.map((entry) {
+        int index = entry.key;
+        SectionItem item = entry.value;
+
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                item.period,
-                style: GoogleFonts.poppins(
-                  color: Colors.black54,
-                  fontSize: 16.0,
-                ),
+              Column(
+                children: [
+                  Container(
+                    height: 16,
+                    width: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blueAccent.withOpacity(0.4),
+                          blurRadius: 12,
+                          spreadRadius: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+                 
+                    Container(
+                      height: 50,
+                      width: 2,
+                      color: Colors.blueAccent.withOpacity(0.5),
+                    ),
+                ],
               ),
-              const SizedBox(height: 5.0),
-              Text(
-                item.description,
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 14.0,
-                  height: 1.5,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white.withOpacity(0.9),
+                    border: Border.all(color: Colors.blueAccent.withOpacity(0.2)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueAccent.withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: GoogleFonts.oswald(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        item.period,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.0,
+                          color: Colors.blueGrey.shade700,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        item.description,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14.0,
+                          color: Colors.black87,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          content: SizedBox.shrink(),
-          isActive: true,
         );
       }).toList(),
     );
   }
 
-  /// **New Card Design for Education**
+  /// **Stylish Colored Education Cards**
   Widget _buildEducationCards(List<SectionItem> sectionItems) {
     return Wrap(
       spacing: 20.0,
@@ -127,11 +173,15 @@ class AboutScreen extends StatelessWidget {
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: Colors.white.withOpacity(0.9),
-              border: Border.all(color: Colors.blueAccent.withOpacity(0.5), width: 1.5),
+              gradient: LinearGradient(
+                colors: [Colors.blue.withOpacity(0.0), Colors.white.withOpacity(0.3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              border: Border.all(color: Colors.blueAccent.withOpacity(0.3), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.blueAccent.withOpacity(0.1),
                   blurRadius: 15,
                   spreadRadius: -3,
                   offset: Offset(3, 3),
@@ -153,7 +203,7 @@ class AboutScreen extends StatelessWidget {
                 Text(
                   item.period,
                   style: GoogleFonts.poppins(
-                    color: Colors.black54,
+                    color: Colors.blueGrey.shade700,
                     fontSize: 16.0,
                   ),
                 ),
@@ -173,6 +223,30 @@ class AboutScreen extends StatelessWidget {
       ).toList(),
     );
   }
+}
+
+/// 🎨 **Custom Painter for Background Overlapping Rectangles**
+class BackgroundPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint1 = Paint()..color = Colors.blue.withOpacity(0.3);
+    final Paint paint2 = Paint()..color = Colors.purple.withOpacity(0.3);
+
+    // Top-left rectangle
+    canvas.drawRect(
+      Rect.fromLTWH(-50, -50, size.width * 0.4, size.height * 0.4),
+      paint1,
+    );
+
+    // Bottom-right rectangle (Overlapping)
+    canvas.drawRect(
+      Rect.fromLTWH(size.width * 0.6, size.height * 0.6, size.width * 0.4, size.height * 0.4),
+      paint2,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 /// **Common Data Model for Experience & Education**
