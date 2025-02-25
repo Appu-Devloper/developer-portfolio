@@ -1,7 +1,7 @@
 import 'package:developer_portfolio/widgets/work_section.dart';
 import 'package:flutter/material.dart';
 import '../widgets/home_section.dart';
-import '../widgets/education_section.dart';
+import '../widgets/about_section.dart';
 import '../widgets/services.dart';
 import '/utils/globals.dart';
 
@@ -11,13 +11,42 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // Define Global Keys for each section
-  final GlobalKey _homeKey = GlobalKey();
-  final GlobalKey _aboutKey = GlobalKey();
-  final GlobalKey _serviceskey = GlobalKey();
-  final GlobalKey _workKey = GlobalKey();
-  // Scroll controller for smooth scrolling
-  final ScrollController _scrollController = ScrollController();
+    final ScrollController _scrollController = ScrollController();
+  int _activeIndex = -1; // Track the currently visible section
+
+  // Create unique GlobalKeys for each container
+  final List<GlobalKey> _keys = List.generate(4, (index) => GlobalKey());
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    for (int i = 0; i < _keys.length; i++) {
+      RenderBox? renderBox = _keys[i].currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        Offset position = renderBox.localToGlobal(Offset.zero);
+        double containerTop = position.dy;
+        double containerBottom = containerTop + renderBox.size.height;
+
+        double screenHeight = MediaQuery.of(context).size.height;
+        double middleOfScreen = screenHeight / 2;
+
+        if (containerTop <= middleOfScreen && containerBottom >= middleOfScreen) {
+          if (_activeIndex != i) {
+            setState(() {
+              _activeIndex = i;
+            });
+          }
+          break;
+        }
+      }
+    }
+  }
+
+
 
   /// Function to Scroll to the Given Section
   void _scrollToSection(GlobalKey key) {
@@ -44,9 +73,10 @@ class _MainPageState extends State<MainPage> {
           ),
           centerTitle: false,
           actions: [
-            _buildNavButton("Home", _homeKey),
-            _buildNavButton("About", _aboutKey),
-            _buildNavButton("Education", _serviceskey),
+            _buildNavButton("Home",  _keys[0],),
+            _buildNavButton("About",  _keys[1],),
+            _buildNavButton("Services",  _keys[2],),
+            _buildNavButton("Work",  _keys[3],),
             SizedBox(width: 20),
           ],
         ),
@@ -56,12 +86,11 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(key: _homeKey, child: HomeScreen()),
-            SizedBox(height: 50.0),
-            Container(key: _aboutKey, child: AboutScreen()),
-            SizedBox(height: 50.0),
-           Container(key: _serviceskey, child: ServicesScreen()),
-            Container(key: _workKey, child: IosAppAd()),
+            Container(key:  _keys[0], child: HomeScreen()),
+            Container(key:  _keys[1], child: AboutMeScreen(index: 1,activeIndex: _activeIndex,)),
+           Container(key:  _keys[2], child: ServicesScreen(index: 2,activeIndex: _activeIndex,)),
+            Container(key:  _keys[3], child: Work_Section()),
+            
           ],
         ),
       ),

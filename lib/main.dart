@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:provider/provider.dart';
 
+import 'services/experience_provider.dart';
+import 'services/services_provider.dart';
 import 'utils/home.dart';
-import 'utils/constants.dart';
+import 'utils/constants.dart'; // Import your Service Provider
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+         ChangeNotifierProvider(create: (context) => ExperienceProvider()),
+        ChangeNotifierProvider(create: (_) => ServicesProvider()), // Register Service Provider
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,13 +27,14 @@ class MyApp extends StatelessWidget {
       title: "Flutter Portfolio",
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
-      darkTheme: Theme.of(context).copyWith(
+      darkTheme: ThemeData(
         platform: TargetPlatform.android,
         scaffoldBackgroundColor: backgroundColor,
         primaryColor: primaryColor,
         canvasColor: backgroundColor,
         textTheme: GoogleFonts.latoTextTheme(),
-      ), builder: (context, child) => ResponsiveBreakpoints.builder(
+      ),
+      builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [
           const Breakpoint(start: 0, end: 450, name: MOBILE),

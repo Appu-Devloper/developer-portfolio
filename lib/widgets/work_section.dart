@@ -3,12 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import '../utils/constants.dart';
 
-class IosAppAd extends StatefulWidget {
+class Work_Section extends StatefulWidget {
   @override
-  _IosAppAdState createState() => _IosAppAdState();
+  _Work_SectionState createState() => _Work_SectionState();
 }
 
-class _IosAppAdState extends State<IosAppAd> {
+class _Work_SectionState extends State<Work_Section> {
   final List<ProjectItem> projects = [
     ProjectItem(
       title: "Cross-Platform App (Android & iOS)",
@@ -66,14 +66,38 @@ class _IosAppAdState extends State<IosAppAd> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             bool isMobile = ResponsiveBreakpoints.of(context).smallerThan(DESKTOP);
-            return Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: isMobile ? 0 : 20.0,
-              runSpacing: 20.0,
-              children: projects
-                  .map((item) => _buildProjectBox(item, constraints, isMobile))
-                  .toList(),
+            return Column(
+              children: [
+                 Text(
+            "MY WORK",
+            style: GoogleFonts.montserrat(
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 26.0,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+
+          // Tagline / Subtitle
+          Text(
+            "A showcase of projects built with passion and innovation", // Customize this
+            style: GoogleFonts.poppins(
+              color: Colors.black54,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 40.0),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: isMobile ? 0 : 20.0,
+                  runSpacing: 20.0,
+                  children: projects
+                      .map((item) => _buildProjectBox(item, constraints, isMobile))
+                      .toList(),
+                ),
+              ],
             );
           },
         ),

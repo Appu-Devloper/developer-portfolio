@@ -40,19 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _timer.cancel();
     super.dispose();
   }
- final Color backgroundColor = Color(0xFFF0F4F8); // Soft Grey-Blue Background
-
+ 
   @override
   Widget build(BuildContext context) {
     return ResponsiveBreakpoints.builder(
       child: Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [backgroundColor, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+    
         child: Center(
           child: ResponsiveRowColumn(
             rowMainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,6 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 : ResponsiveRowColumnType.COLUMN,
             children: [
               ResponsiveRowColumnItem(
+
+
+
                 rowFlex: 1,
                 child: Padding(
                   padding: EdgeInsets.all(30),
@@ -94,9 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Text(
           "👋 Hello there!..",
-          style: GoogleFonts.oswald(
+          style: GoogleFonts.montserrat(
             color: Colors.black87,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             fontSize: ResponsiveValue<double>(
               context,
               defaultValue: 22.0,
@@ -122,13 +118,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Condition.largerThan(name: '4K', value: 58.0),
               ],
             ).value,
-            fontWeight: FontWeight.w900,
+      
           ),
         ),
          SizedBox(height: 15),
         Text(
           "Software Development Engineer",
-          style: GoogleFonts.oswald(
+          style: GoogleFonts.montserrat(
             color: Colors.black54,
             fontSize: ResponsiveValue<double>(
               context,
@@ -138,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Condition.largerThan(name: DESKTOP, value: 32.0),
               ],
             ).value,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w400,
           ),
         ),
         SizedBox(height: 15),
@@ -152,41 +148,26 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             techPhrases[_currentPhraseIndex],
             key: ValueKey(_currentPhraseIndex),
-            style: GoogleFonts.lora(
+            style: GoogleFonts.montserrat(
               color: Colors.black,
-             fontSize: 16,fontWeight: FontWeight.bold
+             fontSize: 16,
               
             ),
           ),
         ),
         SizedBox(height: 12),
 
-        Text(
-          "Crafting intuitive and high-performance apps with elegant code.",
-          style: GoogleFonts.lora(
-            color: Colors.black87,
-            fontSize: ResponsiveValue<double>(
-              context,
-              defaultValue: 18.0,
-              conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 20.0),
-                Condition.largerThan(name: DESKTOP, value: 22.0),
-              ],
-            ).value,
-            height: 1.5,
-          ),
-        ),
-        SizedBox(height: 12),
+        
         Text(
           "Ready to transform your ideas into seamless digital solutions?",
-          style: GoogleFonts.lora(
+          style: GoogleFonts.montserrat(
             color: Colors.black87,
             fontSize: ResponsiveValue<double>(
               context,
-              defaultValue: 18.0,
+              defaultValue: 16.0,
               conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 20.0),
-                Condition.largerThan(name: DESKTOP, value: 22.0),
+                Condition.largerThan(name: TABLET, value: 18.0),
+                Condition.largerThan(name: DESKTOP, value: 18.0),
               ],
             ).value,
             height: 1.5,
