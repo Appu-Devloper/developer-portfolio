@@ -1,8 +1,8 @@
-import 'package:developer_portfolio/utils/constants.dart';
+import 'package:developer_portfolio/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/responsive_widget.dart';
+import '../core/utils/responsive_widget.dart';
 
 
 
@@ -22,15 +22,14 @@ List<Skill> skills = [
 ];
 
 class SkillSection extends StatelessWidget {
+  const SkillSection({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-      child: ResponsiveWidget(
-        desktop: _buildUi(context, kDesktopMaxWidth),
-        tablet: _buildUi(context, kTabletMaxWidth),
-        mobile: _buildUi(context, getMobileMaxWidth(context)),
-      ),
+    return ResponsiveWidget(
+      desktop: _buildUi(context, kDesktopMaxWidth),
+      tablet: _buildUi(context, kTabletMaxWidth),
+      mobile: _buildUi(context, getMobileMaxWidth(context)),
     );
   }
 
@@ -77,6 +76,8 @@ class SkillSection extends StatelessWidget {
 
 /// **Skill Section Header**
 class SkillHeader extends StatelessWidget {
+  const SkillHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -109,7 +110,7 @@ class SkillHeader extends StatelessWidget {
 class SkillBar extends StatelessWidget {
   final Skill skill;
 
-  const SkillBar({Key? key, required this.skill}) : super(key: key);
+  const SkillBar({super.key, required this.skill});
 
   @override
   Widget build(BuildContext context) {

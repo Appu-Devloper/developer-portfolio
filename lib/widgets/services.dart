@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/services_provider.dart';
-import '../utils/service_card.dart';
+import '../core/repositories/services_repository.dart';
+import '../core/utils/service_card.dart';
 
 class ServicesScreen extends StatefulWidget {
   final int index;

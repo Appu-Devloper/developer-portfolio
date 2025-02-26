@@ -13,7 +13,7 @@ class SectionItem {
 }
 
 class ExperienceProvider with ChangeNotifier {
-  List<SectionItem> _experienceList = [
+  final List<SectionItem> _experienceList = [
     SectionItem(
       title: "Software Development Engineer",
       description: "Developed scalable software solutions to meet business needs, ensuring high performance and maintainability.\n"

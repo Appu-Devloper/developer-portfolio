@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../utils/image_painter.dart';
+import '../core/utils/image_painter.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -15,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     "💻 Crafting Digital Experiences",
     "💡 Innovating with Code",
     "🚀 Building the Future",
-    "⚡ Tech, Code, and Creativity"
+    "⚡ Tech, Code, and Creativity",
   ];
 
   int _currentPhraseIndex = 0;
@@ -40,38 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
     _timer.cancel();
     super.dispose();
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveBreakpoints.builder(
-      child: Container(
-    
-        child: Center(
-          child: ResponsiveRowColumn(
-            rowMainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            layout: ResponsiveBreakpoints.of(context).largerThan(MOBILE)
-                ? ResponsiveRowColumnType.ROW
-                : ResponsiveRowColumnType.COLUMN,
-            children: [
-              ResponsiveRowColumnItem(
-
-
-
-                rowFlex: 1,
-                child: Padding(
-                  padding: EdgeInsets.all(30),
-                  child: _buildAdaptiveHomeScreenText(context),
-                ),
+      child: Center(
+        child: ResponsiveRowColumn(
+          rowMainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          layout:
+              ResponsiveBreakpoints.of(context).largerThan(MOBILE)
+                  ? ResponsiveRowColumnType.ROW
+                  : ResponsiveRowColumnType.COLUMN,
+          children: [
+            ResponsiveRowColumnItem(
+              rowFlex: 1,
+              child: Padding(
+                padding: EdgeInsets.all(30),
+                child: _buildAdaptiveHomeScreenText(context),
               ),
-              ResponsiveRowColumnItem(
-                rowFlex: 1,
-                child: Padding(
-                  padding: EdgeInsets.all(30),
-                  child: _buildHomeScreenImage(context),
-                ),
-              ),
-            ],
-          ),
+            ),
+            // ResponsiveRowColumnItem(
+            //   rowFlex: 1,
+            //   child: Padding(
+            //     padding: EdgeInsets.all(30),
+            //     child: _buildHomeScreenImage(context),
+            //   ),
+            // ),
+          ],
         ),
       ),
       breakpoints: [
@@ -93,15 +90,16 @@ class _HomeScreenState extends State<HomeScreen> {
           style: GoogleFonts.montserrat(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
-            fontSize: ResponsiveValue<double>(
-              context,
-              defaultValue: 22.0,
-              conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 26.0),
-                Condition.largerThan(name: DESKTOP, value: 30.0),
-                Condition.largerThan(name: '4K', value: 34.0),
-              ],
-            ).value,
+            fontSize:
+                ResponsiveValue<double>(
+                  context,
+                  defaultValue: 22.0,
+                  conditionalValues: [
+                    Condition.largerThan(name: TABLET, value: 26.0),
+                    Condition.largerThan(name: DESKTOP, value: 30.0),
+                    Condition.largerThan(name: '4K', value: 34.0),
+                  ],
+                ).value,
           ),
         ),
         SizedBox(height: 15),
@@ -109,36 +107,37 @@ class _HomeScreenState extends State<HomeScreen> {
           "Appu M",
           style: GoogleFonts.lora(
             color: Colors.black87,
-            fontSize: ResponsiveValue<double>(
-              context,
-              defaultValue: 36.0,
-              conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 42.0),
-                Condition.largerThan(name: DESKTOP, value: 50.0),
-                Condition.largerThan(name: '4K', value: 58.0),
-              ],
-            ).value,
-      
+            fontSize:
+                ResponsiveValue<double>(
+                  context,
+                  defaultValue: 36.0,
+                  conditionalValues: [
+                    Condition.largerThan(name: TABLET, value: 42.0),
+                    Condition.largerThan(name: DESKTOP, value: 50.0),
+                    Condition.largerThan(name: '4K', value: 58.0),
+                  ],
+                ).value,
           ),
         ),
-         SizedBox(height: 15),
+        SizedBox(height: 15),
         Text(
           "Software Development Engineer",
           style: GoogleFonts.montserrat(
             color: Colors.black54,
-            fontSize: ResponsiveValue<double>(
-              context,
-              defaultValue: 24.0, // Increased from 20
-              conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 28.0),
-                Condition.largerThan(name: DESKTOP, value: 32.0),
-              ],
-            ).value,
+            fontSize:
+                ResponsiveValue<double>(
+                  context,
+                  defaultValue: 24.0, // Increased from 20
+                  conditionalValues: [
+                    Condition.largerThan(name: TABLET, value: 28.0),
+                    Condition.largerThan(name: DESKTOP, value: 32.0),
+                  ],
+                ).value,
             fontWeight: FontWeight.w400,
           ),
         ),
         SizedBox(height: 15),
-  
+
         /// **🌀 Animated Tech-Oriented Text**
         AnimatedSwitcher(
           duration: Duration(milliseconds: 800),
@@ -148,28 +147,24 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             techPhrases[_currentPhraseIndex],
             key: ValueKey(_currentPhraseIndex),
-            style: GoogleFonts.montserrat(
-              color: Colors.black,
-             fontSize: 16,
-              
-            ),
+            style: GoogleFonts.montserrat(color: Colors.black, fontSize: 16),
           ),
         ),
         SizedBox(height: 12),
 
-        
         Text(
           "Ready to transform your ideas into seamless digital solutions?",
           style: GoogleFonts.montserrat(
             color: Colors.black87,
-            fontSize: ResponsiveValue<double>(
-              context,
-              defaultValue: 16.0,
-              conditionalValues: [
-                Condition.largerThan(name: TABLET, value: 18.0),
-                Condition.largerThan(name: DESKTOP, value: 18.0),
-              ],
-            ).value,
+            fontSize:
+                ResponsiveValue<double>(
+                  context,
+                  defaultValue: 16.0,
+                  conditionalValues: [
+                    Condition.largerThan(name: TABLET, value: 18.0),
+                    Condition.largerThan(name: DESKTOP, value: 18.0),
+                  ],
+                ).value,
             height: 1.5,
           ),
         ),
@@ -207,15 +202,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Image.asset(
           "assets/avatar.png", // Make sure the path is correct
-          height: ResponsiveValue<double>(
-            context,
-            defaultValue: 260.0,
-            conditionalValues: [
-              Condition.largerThan(name: TABLET, value: 300.0),
-              Condition.largerThan(name: DESKTOP, value: 350.0),
-              Condition.largerThan(name: '4K', value: 420.0),
-            ],
-          ).value,
+          height:
+              ResponsiveValue<double>(
+                context,
+                defaultValue: 260.0,
+                conditionalValues: [
+                  Condition.largerThan(name: TABLET, value: 300.0),
+                  Condition.largerThan(name: DESKTOP, value: 350.0),
+                  Condition.largerThan(name: '4K', value: 420.0),
+                ],
+              ).value,
           fit: BoxFit.contain,
         ),
       ],

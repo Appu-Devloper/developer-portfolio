@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class CustomImageBackground extends CustomPainter {
@@ -10,9 +8,9 @@ class CustomImageBackground extends CustomPainter {
         Paint()
           ..shader = LinearGradient(
             colors: [
-              Colors.blue.withOpacity(0.25),
-              Colors.purple.withOpacity(0.25),
-              Colors.pink.withOpacity(0.25),
+              Colors.blue.withValues(alpha: 0.25),
+              Colors.purple.withValues(alpha: 0.25),
+              Colors.pink.withValues(alpha: 0.25),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -44,10 +42,10 @@ class CustomImageBackground extends CustomPainter {
     // Circular Color Splashes (Soft Abstract Spots)
     Paint circlePaint = Paint()..style = PaintingStyle.fill;
     List<Color> colors = [
-      Colors.blueAccent.withOpacity(0.3),
-      Colors.purpleAccent.withOpacity(0.3),
-      Colors.pinkAccent.withOpacity(0.3),
-      Colors.cyanAccent.withOpacity(0.3),
+      Colors.blueAccent.withValues(alpha: 0.3),
+      Colors.purpleAccent.withValues(alpha: 0.3),
+      Colors.pinkAccent.withValues(alpha: 0.3),
+      Colors.cyanAccent.withValues(alpha: 0.3),
     ];
 
     for (int i = 0; i < colors.length; i++) {
@@ -63,7 +61,7 @@ class CustomImageBackground extends CustomPainter {
     // Glow Effect Behind Image
     Paint glowPaint =
         Paint()
-          ..color = Colors.white.withOpacity(0.15)
+          ..color = Colors.white.withValues(alpha:0.15)
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20);
 
     canvas.drawCircle(
@@ -75,7 +73,7 @@ class CustomImageBackground extends CustomPainter {
     // Elegant Wave Stroke Line
     Paint wavePaint =
         Paint()
-          ..color = Colors.white.withOpacity(0.6)
+          ..color = Colors.white.withValues(alpha: 0.6)
           ..strokeWidth = 2
           ..style = PaintingStyle.stroke;
 

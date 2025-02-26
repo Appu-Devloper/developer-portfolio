@@ -157,7 +157,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
       {"icon": FontAwesomeIcons.python, "label": "Python"},
       {"icon": FontAwesomeIcons.database, "label": "SQL"},
       {"icon": FontAwesomeIcons.microchip, "label": "IoT"},
-      {"icon": FontAwesomeIcons.cloud, "label": "REST APIs"},
+      {"icon": FontAwesomeIcons.cloud, "label": "REST"},
     ];
 
     return Wrap(
@@ -179,8 +179,7 @@ class _AboutMeScreenState extends State<AboutMeScreen>
 
         return Transform.translate(
           offset: Offset(dx, dy),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          child: Container(height: 50,width: 50,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Colors.white, Colors.white54],
@@ -190,7 +189,18 @@ class _AboutMeScreenState extends State<AboutMeScreen>
               borderRadius: BorderRadius.circular(15),
               border: Border.all(color: Colors.black26),
             ),
-            child: FaIcon(icon, color: Colors.purple, size: 25),
+            child: Center(
+              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FaIcon(icon, color: Colors.purple, size: 20),
+                  Text(label,style:GoogleFonts.poppins(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.purple,
+                    ),)
+                ],
+              ),
+            ),
           ),
         );
       },

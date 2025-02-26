@@ -1,102 +1,81 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import '../utils/constants.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import '../core/repositories/projects_repository.dart';
 
-class Work_Section extends StatefulWidget {
+class WorkSection extends StatefulWidget {
+  final int index;
+  final int activeIndex;
+  const WorkSection({super.key, required this.index, required this.activeIndex});
+
   @override
-  _Work_SectionState createState() => _Work_SectionState();
+  _WorkSectionState createState() => _WorkSectionState();
 }
 
-class _Work_SectionState extends State<Work_Section> {
-  final List<ProjectItem> projects = [
-    ProjectItem(
-      title: "Cross-Platform App (Android & iOS)",
-      features: [
-        "Developed Cross-Platform App for multimedia streaming.",
-        "Integrated FCM for real-time push notifications.",
-        "Connected app to backend servers using REST APIs.",
-        "Implemented deep linking for better user navigation.",
-      ],
-      buttons: ["Open Android App", "Open iOS App"],
-      isPrivate: false,
-    ),
-    ProjectItem(
-      title: "Excel Comparison & Validation",
-      features: [
-        "Enterprise Solution for customer-specific validation.",
-        "Built for comparing & validating Excel data efficiently.",
-        "Integrated Python API for automated backend processing.",
-        "Reduces manual efforts & improves data accuracy.",
-      ],
-      buttons: [],
-      isPrivate: true,
-    ),
-    ProjectItem(
-      title: "IoT Dashboard for Data Management",
-      features: [
-        "Custom-built IoT dashboard for real-time data tracking.",
-        "Deployed at customer site for secured data handling.",
-        "Integrated MQTT, Apache, & Nginx for seamless connectivity.",
-        "Helps businesses visualize & manage critical insights.",
-      ],
-      buttons: [],
-      isPrivate: true,
-    ),
-    ProjectItem(
-      title: "The Ayurveda Chatbot",
-      features: [
-        "Flutter-based mobile application providing Ayurvedic health guidance.",
-        "AI-powered responses for herbal remedies, doshas, diet, yoga, and traditional medicine.",
-        "Uses Google Gemini AI to generate personalized Ayurvedic solutions.",
-        "User-friendly interface with intuitive navigation for better experience."
-      ],
-      buttons: ["GitHub Repository"],
-      isPrivate: false,
-    ),
-  ];
+class _WorkSectionState extends State<WorkSection> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => Provider.of<ProjectsProvider>(context, listen: false).fetchProjects());
+  }
 
   @override
   Widget build(BuildContext context) {
+    var projectsProvider = Provider.of<ProjectsProvider>(context);
+    var projects = projectsProvider.projects;
+    
     return Center(
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 25.0),
         alignment: Alignment.center,
         child: LayoutBuilder(
           builder: (context, constraints) {
             bool isMobile = ResponsiveBreakpoints.of(context).smallerThan(DESKTOP);
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                 Text(
-            "MY WORK",
-            style: GoogleFonts.montserrat(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 26.0,
-            ),
-          ),
-          const SizedBox(height: 8.0),
-
-          // Tagline / Subtitle
-          Text(
-            "A showcase of projects built with passion and innovation", // Customize this
-            style: GoogleFonts.poppins(
-              color: Colors.black54,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          const SizedBox(height: 40.0),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: isMobile ? 0 : 20.0,
-                  runSpacing: 20.0,
-                  children: projects
-                      .map((item) => _buildProjectBox(item, constraints, isMobile))
-                      .toList(),
+                Text(
+                  "MY WORK",
+                  style: GoogleFonts.montserrat(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.0,
+                  ),
                 ),
+                const SizedBox(height: 10.0),
+                Text(
+                  "A showcase of projects built with passion and innovation",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    color: Colors.black54,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 50.0),
+              projects.isEmpty
+    ? CircularProgressIndicator(color: Colors.blueAccent)
+    : Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: isMobile ? 0 : 20.0,
+      runSpacing: 20.0,
+      children: List.generate(
+        projects.length,
+        (index) {
+          Widget projectBox = _buildProjectBox(projects[index], constraints, isMobile);
+    
+            return projectBox; // No animation if index ≠ activeIndex
+          }
+        
+      ),
+    ),
+
               ],
             );
           },
@@ -104,90 +83,75 @@ class _Work_SectionState extends State<Work_Section> {
       ),
     );
   }
-
-  /// 🟦 **Creates a Boxed Section for Each Card**
-  Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
-    return Container(
-      width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 12,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // **Background Pattern inside Box**
-          Positioned.fill(child: CustomPaint(painter: CardBackgroundPainter())),
-          _buildProjectCard(project),
-        ],
-      ),
-    );
-  }
-
-  /// 🟩 **Project Card with Glassmorphism & Light Colors**
-  Widget _buildProjectCard(ProjectItem project) {
-    return Container(
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.white.withOpacity(0.9), Colors.blue.shade50],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
+  return AnimatedContainer(
+    duration: Duration(milliseconds: 300),
+    width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.95),
+      borderRadius: BorderRadius.circular(18),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.08),
+          blurRadius: 12,
+          spreadRadius: 2,
+          offset: Offset(3, 5),
         ),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+      ],
+      border: Border.all(color: Colors.grey.withOpacity(0.1)),
+    ),
+    child: _buildProjectCard(project),
+  );
+}
+
+Widget _buildProjectCard(ProjectItem project) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Project Title
+      Text(
+        project.title.toUpperCase(),
+        style: GoogleFonts.montserrat(
+          color: Colors.black87,
+          fontWeight: FontWeight.bold,
+          fontSize: 24.0,
+          letterSpacing: 1.2,
+        ),
       ),
-      child: Column(
+      const SizedBox(height: 12.0),
+
+      // Features List
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            project.title.toUpperCase(),
-            style: GoogleFonts.oswald(
-              color: Colors.black87,
-              fontWeight: FontWeight.w900,
-              fontSize: 22.0,
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: project.features
-                .map((feature) => _buildFeatureItem(feature))
-                .toList(),
-          ),
-          const SizedBox(height: 20.0),
-          if (!project.isPrivate)
-            Wrap(
-              spacing: 10.0,
-              children: project.buttons
-                  .map((buttonText) => _buildButton(text: buttonText))
-                  .toList(),
-            )
-          else
-            _buildPrivateTag(),
-        ],
+        children: project.features.map((feature) => _buildFeatureItem(feature)).toList(),
       ),
-    );
-  }
+      const SizedBox(height: 20.0),
+
+      // Action Buttons
+      if (!project.isPrivate)
+        Wrap(
+          spacing: 12.0,
+          runSpacing: 8.0,
+          children: project.buttons.map((buttonText) => _buildButton(text: buttonText)).toList(),
+        )
+      else
+        _buildPrivateTag(),
+    ],
+  );
+}
 
   Widget _buildFeatureItem(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
         children: [
-          Icon(Icons.check_circle, color: Colors.blueAccent, size: 16.0),
-          const SizedBox(width: 8.0),
+          Icon(Icons.check_circle, color: Colors.purple, size: 18.0),
+          const SizedBox(width: 10.0),
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.montserrat(
                 color: Colors.black87,
                 fontSize: 14,
                 height: 1.5,
@@ -202,67 +166,38 @@ class _Work_SectionState extends State<Work_Section> {
   Widget _buildButton({required String text}) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors. purple,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       ),
       onPressed: () {},
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          fontSize: 13.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.0, fontWeight: FontWeight.w600)),
     );
   }
-
-  Widget _buildPrivateTag() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.red.shade100,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red, width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.lock, color: Colors.red, size: 18),
-          SizedBox(width: 8),
-          Text(
-            "Enterprise Solution",
-            style: GoogleFonts.poppins(
-              color: Colors.red,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+Widget _buildPrivateTag() {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.red.withValues(alpha: 0.3),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.lock, color: Colors.redAccent, size: 16),
+        const SizedBox(width: 6),
+        Text(
+          "Enterprise Solution (Private)",
+          style: GoogleFonts.montserrat(
+            color: Colors.red,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }
 
-/// 🎨 **Light Pattern Inside Each Box**
-class CardBackgroundPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()..color = Colors.blue.withOpacity(0.1);
-    canvas.drawCircle(Offset(size.width * 0.2, size.height * 0.2), 50, paint);
-    canvas.drawCircle(Offset(size.width * 0.8, size.height * 0.8), 70, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
-
-class ProjectItem {
-  final String title;
-  final List<String> features, buttons;
-  final bool isPrivate;
-
-  ProjectItem({required this.title, required this.features, required this.buttons, required this.isPrivate});
 }

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../services/services_provider.dart';
+import '../repositories/services_repository.dart';
 
 class ServiceCard extends StatefulWidget {
   final Service service;
@@ -28,10 +28,10 @@ class _ServiceCardState extends State<ServiceCard> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
-          border: isHovered ? Border.all(color: widget.service.color.withOpacity(0.7), width: 2) : null,
+          border: isHovered ? Border.all(color: widget.service.color.withValues(alpha: 0.7), width: 2) : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               blurRadius: 15,
               spreadRadius: -3,
               offset: Offset(3, 3),
@@ -43,7 +43,7 @@ class _ServiceCardState extends State<ServiceCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(widget.service.icon, size: 50, color: widget.service.color.withOpacity(0.8)),
+              Icon(widget.service.icon, size: 50, color: widget.service.color.withValues(alpha: 0.8)),
               SizedBox(height: 12),
               Text(
                 widget.service.title,
@@ -72,7 +72,7 @@ class _ServiceCardState extends State<ServiceCard> {
                       (feature) => Container(
                         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: widget.service.color.withOpacity(0.2),
+                          color: widget.service.color.withValues(alpha:0.2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
