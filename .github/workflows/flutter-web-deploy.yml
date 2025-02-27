@@ -27,11 +27,10 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-     - name: Deploy to GitHub Pages
-       uses: JamesIves/github-pages-deploy-action@v4
-       with:
+      - name: Deploy to GitHub Pages  # FIXED INDENTATION
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
           branch: gh-pages
           folder: build/web
           token: ${{ secrets.GH_PAT }}  # Use Personal Access Token
-
           clean: true  # Clears old files before deploying
