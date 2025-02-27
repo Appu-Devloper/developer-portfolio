@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? ResponsiveRowColumnType.ROW
                   : ResponsiveRowColumnType.COLUMN,
           children: [
+            
             ResponsiveRowColumnItem(
               rowFlex: 1,
               child: Padding(
@@ -144,25 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
   transitionBuilder: (child, animation) {
     return FadeTransition(opacity: animation, child: child);
   },
-  child: Row(
-    key: ValueKey(_currentPhraseIndex), // Ensures unique transitions
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(
-        Icons.code, // You can change this to another relevant icon
-        color: Colors.purple,
-        size: 20,
-      ),
-      const SizedBox(width: 8), // Space between icon and text
-      Text(
-        techPhrases[_currentPhraseIndex],
-        style: GoogleFonts.montserrat(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ],
+  child: Text(
+    techPhrases[_currentPhraseIndex],
+    style: GoogleFonts.montserrat(
+      color: Colors.black,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
   ),
 ),
 

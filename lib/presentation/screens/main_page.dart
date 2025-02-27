@@ -1,5 +1,8 @@
 import 'package:developer_portfolio/sections/work_section.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../sections/footer_section.dart';
 import '../../sections/home_section.dart';
 import '../../sections/about_section.dart';
@@ -16,7 +19,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final ScrollController _scrollController = ScrollController();
-  int _activeIndex = -1; // Track the currently visible section
+  int _activeIndex = 0; // Track the currently visible section
 
   // Create unique GlobalKeys for each container
   final List<GlobalKey> _keys = List.generate(5, (index) => GlobalKey());
@@ -61,34 +64,116 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  /// Function to Scroll to the Top
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0.0,
+      duration: Duration(milliseconds: 700),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _launchResumeURL() async {
+    const url = 'https://drive.google.com/file/d/1Qt69Vx4b0q1FYg70Yiiq2blsuvczrsLe/view';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrlString(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       key: Globals.scaffoldKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0), // Fixed height for navbar
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 2.0,
-          title: Text(
-            "My Portfolio",
-            style: TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.bold,
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: Text(
+          "<Appu M />",
+          style: GoogleFonts.alexBrush(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
-          centerTitle: false,
-          actions: [
-            _buildNavButton("Home", _keys[0]),
-            _buildNavButton("About", _keys[1]),
-            _buildNavButton("Services", _keys[2]),
-            _buildNavButton("Work", _keys[3]),
-             _buildNavButton("Skills", _keys[4]),
-            SizedBox(width: 20),
-          ],
         ),
+        centerTitle: false,
+         actions: MediaQuery.of(context).size.width > 600
+            ? [
+                _buildNavButton("Home", _keys[0], 0),
+                _buildNavButton("About", _keys[1], 1),
+                _buildNavButton("Services", _keys[2], 2),
+                _buildNavButton("Work", _keys[3], 3),
+                _buildNavButton("Skills", _keys[4], 4),
+                OutlinedButton(
+                  onPressed: _launchResumeURL,
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    side: BorderSide(color: Colors.purple),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  ),
+                  child: Text(
+                    "Resume",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.purple,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+              ]
+            : [ Builder(
+  builder: (context) => IconButton(
+    icon: Icon(Icons.menu, color: Colors.black87),
+    onPressed: () {
+      Scaffold.of(context).openEndDrawer();
+    },
+  ),
+),
+]
       ),
+      endDrawer: MediaQuery.of(context).size.width <= 600
+          ? Drawer(
+              child: Column(
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                 
+                 _buildNavButton1("Home", _keys[0], 0),
+                _buildNavButton1("About", _keys[1], 1),
+                _buildNavButton1("Services", _keys[2], 2),
+                _buildNavButton1("Work", _keys[3], 3),
+                _buildNavButton1("Skills", _keys[4], 4),
+                Container(height: 30,width: 120,
+                  child: OutlinedButton(
+                    onPressed: _launchResumeURL,
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(color: Colors.purple),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                    ),
+                    child: Text(
+                      "Resume",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.purple,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+                ],
+              ),
+            )
+          : null,
+      
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
@@ -111,24 +196,99 @@ class _MainPageState extends State<MainPage> {
               key: _keys[4],
               child: SkillSection(index: 4, activeIndex: _activeIndex),
             ),
-            SizedBox(height: 50,),
+            
+           
+            SizedBox(height: 50),
             FooterSection()
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _scrollToTop,
+        backgroundColor: Colors.black54,
+        child: Icon(Icons.arrow_upward, color: Colors.white),
       ),
     );
   }
 
   /// **Navigation Bar Buttons**
-  Widget _buildNavButton(String label, GlobalKey sectionKey) {
-    return TextButton(
-      onPressed: () => _scrollToSection(sectionKey),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: Colors.black87,
-          fontWeight: FontWeight.w600,
-          fontSize: 16.0,
+  Widget _buildNavButton(String label, GlobalKey sectionKey, int index) {
+    bool isSelected = _activeIndex == index;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: InkWell(
+        onTap: () => _scrollToSection(sectionKey),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.montserrat(
+                color: Colors.black87,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
+            if (isSelected)
+              Container(
+                margin: EdgeInsets.only(top: 4),
+                height: 2,
+                width: 60,
+                color: Colors.purple,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+   Widget _buildNavButton1(String label, GlobalKey sectionKey, int index) {
+    bool isSelected = _activeIndex == index;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: InkWell(
+        onTap: () { _scrollToSection(sectionKey);Navigator.pop(context);},
+        borderRadius: BorderRadius.circular(8),
+        splashColor: Colors.purple.withOpacity(0.3),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 120,height: 30,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [Colors.deepPurple, Colors.purpleAccent]
+                      : [Colors.white, Colors.white],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                border: Border.all(
+                  color: isSelected?Colors.white: Colors.purple,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: Colors.purpleAccent.withOpacity(0.5),
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Center(
+                child: Text(
+                  label,
+                  style: GoogleFonts.montserrat(
+                    color: isSelected ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+           
+          ],
         ),
       ),
     );
