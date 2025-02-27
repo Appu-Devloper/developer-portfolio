@@ -27,9 +27,11 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages  # The branch that will store the deployed site
-          folder: build/web  # The folder where Flutter builds the web app
+     - name: Deploy to GitHub Pages
+       uses: JamesIves/github-pages-deploy-action@v4
+       with:
+          branch: gh-pages
+          folder: build/web
+          token: ${{ secrets.GH_PAT }}  # Use Personal Access Token
+
           clean: true  # Clears old files before deploying
