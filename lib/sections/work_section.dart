@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../core/repositories/projects_repository.dart';
+import 'experience_section.dart';
 
 class WorkSection extends StatefulWidget {
   final int index;
@@ -44,7 +46,7 @@ class _WorkSectionState extends State<WorkSection> {
                   style: GoogleFonts.montserrat(
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
-                    fontSize: 30.0,
+                    fontSize: 26.0,
                   ),
                 ),
                 const SizedBox(height: 10.0),
@@ -53,7 +55,7 @@ class _WorkSectionState extends State<WorkSection> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     color: Colors.black54,
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -75,7 +77,7 @@ class _WorkSectionState extends State<WorkSection> {
         
       ),
     ),
-
+ExperienceSection()
               ],
             );
           },
@@ -84,23 +86,16 @@ class _WorkSectionState extends State<WorkSection> {
     );
   }
 Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
-  return AnimatedContainer(
-    duration: Duration(milliseconds: 300),
+  return Container(
+   
     width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
     padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.95),
-      borderRadius: BorderRadius.circular(18),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.08),
-          blurRadius: 12,
-          spreadRadius: 2,
-          offset: Offset(3, 5),
+   decoration: BoxDecoration(
+        color: Colors.grey[100], // Light gray for smooth blending
+        border:  Border.all(
+          color: Colors.black12, width: 1, // Subtle top border
         ),
-      ],
-      border: Border.all(color: Colors.grey.withOpacity(0.1)),
-    ),
+      ),
     child: _buildProjectCard(project),
   );
 }
@@ -133,12 +128,36 @@ Widget _buildProjectCard(ProjectItem project) {
         Wrap(
           spacing: 12.0,
           runSpacing: 8.0,
-          children: project.buttons.map((buttonText) => _buildButton(text: buttonText)).toList(),
+        children: project.buttons.entries.map((entry) => _buildButton(text: entry.key, url: entry.value)).toList(),
         )
       else
         _buildPrivateTag(),
     ],
   );
+}
+
+Widget _buildButton({required String text, required String url}) {
+  return OutlinedButton(
+    style: OutlinedButton.styleFrom(
+      side: const BorderSide(color: Colors.purple, width: 2), // Purple border
+      foregroundColor: Colors.purple, // Text color
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+    ),
+    onPressed: () => _launchURL(url),
+    child: Text(
+      text,
+      style: GoogleFonts.montserrat(fontSize: 14.0, fontWeight: FontWeight.w600),
+    ),
+  );
+}
+
+/// **Function to Open URLs**
+void _launchURL(String url) async {
+  final Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    debugPrint("Could not launch $url");
+  }
 }
 
   Widget _buildFeatureItem(String text) {
@@ -162,24 +181,12 @@ Widget _buildProjectCard(ProjectItem project) {
       ),
     );
   }
-
-  Widget _buildButton({required String text}) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors. purple,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-      ),
-      onPressed: () {},
-      child: Text(text, style: GoogleFonts.montserrat(fontSize: 14.0, fontWeight: FontWeight.w600)),
-    );
-  }
 Widget _buildPrivateTag() {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
     decoration: BoxDecoration(
-      color: Colors.red.withValues(alpha: 0.3),
+      color: Colors.red.withValues(alpha: 0.3
+      ),
       borderRadius: BorderRadius.circular(12),
     ),
     child: Row(

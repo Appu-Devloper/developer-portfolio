@@ -14,10 +14,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> techPhrases = [
-    "💻 Crafting Digital Experiences",
-    "💡 Innovating with Code",
-    "🚀 Building the Future",
-    "⚡ Tech, Code, and Creativity",
+    "Crafting Digital Experiences",
+    "Innovating with Code",
+    "Building the Future",
+    "Tech, Code, and Creativity",
   ];
 
   int _currentPhraseIndex = 0;
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startTextAnimation() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       setState(() {
         _currentPhraseIndex = (_currentPhraseIndex + 1) % techPhrases.length;
       });
@@ -61,13 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _buildAdaptiveHomeScreenText(context),
               ),
             ),
-            // ResponsiveRowColumnItem(
-            //   rowFlex: 1,
-            //   child: Padding(
-            //     padding: EdgeInsets.all(30),
-            //     child: _buildHomeScreenImage(context),
-            //   ),
-            // ),
+            ResponsiveRowColumnItem(
+              rowFlex: 1,
+              child: Padding(
+                padding: EdgeInsets.all(30),
+                child: _buildHomeScreenImage(context),
+              ),
+            ),
           ],
         ),
       ),
@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: 15),
         Text(
           "Appu M",
-          style: GoogleFonts.lora(
+          style: GoogleFonts.montserrat(
             color: Colors.black87,
             fontSize:
                 ResponsiveValue<double>(
@@ -139,17 +139,33 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: 15),
 
         /// **🌀 Animated Tech-Oriented Text**
-        AnimatedSwitcher(
-          duration: Duration(milliseconds: 800),
-          transitionBuilder: (child, animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: Text(
-            techPhrases[_currentPhraseIndex],
-            key: ValueKey(_currentPhraseIndex),
-            style: GoogleFonts.montserrat(color: Colors.black, fontSize: 16),
-          ),
+       AnimatedSwitcher(
+  duration: const Duration(milliseconds: 300), // Smooth transition
+  transitionBuilder: (child, animation) {
+    return FadeTransition(opacity: animation, child: child);
+  },
+  child: Row(
+    key: ValueKey(_currentPhraseIndex), // Ensures unique transitions
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        Icons.code, // You can change this to another relevant icon
+        color: Colors.purple,
+        size: 20,
+      ),
+      const SizedBox(width: 8), // Space between icon and text
+      Text(
+        techPhrases[_currentPhraseIndex],
+        style: GoogleFonts.montserrat(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
         ),
+      ),
+    ],
+  ),
+),
+
         SizedBox(height: 12),
 
         Text(

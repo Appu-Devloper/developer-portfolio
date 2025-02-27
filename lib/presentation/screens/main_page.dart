@@ -1,8 +1,10 @@
-import 'package:developer_portfolio/widgets/work_section.dart';
+import 'package:developer_portfolio/sections/work_section.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/home_section.dart';
-import '../../widgets/about_section.dart';
-import '../../widgets/services.dart';
+import '../../sections/footer_section.dart';
+import '../../sections/home_section.dart';
+import '../../sections/about_section.dart';
+import '../../sections/skill_section.dart';
+import '../../sections/services.dart';
 import '../../core/utils/globals.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   int _activeIndex = -1; // Track the currently visible section
 
   // Create unique GlobalKeys for each container
-  final List<GlobalKey> _keys = List.generate(4, (index) => GlobalKey());
+  final List<GlobalKey> _keys = List.generate(5, (index) => GlobalKey());
 
   @override
   void initState() {
@@ -82,6 +84,7 @@ class _MainPageState extends State<MainPage> {
             _buildNavButton("About", _keys[1]),
             _buildNavButton("Services", _keys[2]),
             _buildNavButton("Work", _keys[3]),
+             _buildNavButton("Skills", _keys[4]),
             SizedBox(width: 20),
           ],
         ),
@@ -91,19 +94,25 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container(key: _keys[0], child: HomeScreen()),
-            // Container(
-            //   key: _keys[1],
-            //   child: AboutMeScreen(index: 1, activeIndex: _activeIndex),
-            // ),
-            // Container(
-            //   key: _keys[2],
-            //   child: ServicesScreen(index: 2, activeIndex: _activeIndex),
-            // ),
+            Container(key: _keys[0], child: HomeScreen()),
+            Container(
+              key: _keys[1],
+              child: AboutMeScreen(index: 1, activeIndex: _activeIndex),
+            ),
+            Container(
+              key: _keys[2],
+              child: ServicesScreen(index: 2, activeIndex: _activeIndex),
+            ),
             Container(
               key: _keys[3],
               child: WorkSection(index: 3, activeIndex: _activeIndex),
             ),
+            Container(
+              key: _keys[4],
+              child: SkillSection(index: 4, activeIndex: _activeIndex),
+            ),
+            SizedBox(height: 50,),
+            FooterSection()
           ],
         ),
       ),

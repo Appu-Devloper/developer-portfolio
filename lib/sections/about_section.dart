@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'dart:math';
 
 class AboutMeScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class AboutMeScreen extends StatefulWidget {
 class _AboutMeScreenState extends State<AboutMeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  bool _isImageLoaded = false;
 
   @override
   void initState() {
@@ -53,9 +55,31 @@ class _AboutMeScreenState extends State<AboutMeScreen>
                         flex: 4,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            'assets/appdevlopment.png',
-                            fit: BoxFit.cover,
+                          child: Stack(
+                            children: [
+                              if (!_isImageLoaded) _shimmerPlaceholder(),
+                              Image.asset(
+                                'assets/appdevlopment.png',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 300,
+                                frameBuilder: (context, child, frame, _) {
+                                  _isImageLoaded=true;
+                                  if (frame == null) {
+                                    return _shimmerPlaceholder();
+                                  }
+                                  return AnimatedOpacity(
+                                    opacity: _isImageLoaded ? 1.0 : 0.0,
+                                    duration: const Duration(milliseconds: 500),
+                                    child: child,
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return _errorPlaceholder();
+                                },
+                               
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -72,6 +96,35 @@ class _AboutMeScreenState extends State<AboutMeScreen>
           ),
         );
       },
+    );
+  }
+
+  Widget _shimmerPlaceholder() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: double.infinity,
+        height: 300,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+    );
+  }
+
+  Widget _errorPlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: const Center(
+        child: Icon(Icons.error, color: Colors.red, size: 40),
+      ),
     );
   }
 
@@ -172,14 +225,15 @@ class _AboutMeScreenState extends State<AboutMeScreen>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        // Circular movement
-        double angle = _controller.value * 2 * pi; // Convert progress to radians
-        double dx = 5 * cos(angle); // Horizontal movement
-        double dy = 5 * sin(angle); // Vertical movement
+        double angle = _controller.value * 2 * pi; 
+        double dx = 5 * cos(angle); 
+        double dy = 5 * sin(angle); 
 
         return Transform.translate(
           offset: Offset(dx, dy),
-          child: Container(height: 50,width: 50,
+          child: Container(
+            height: 50,
+            width: 50,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Colors.white, Colors.white54],
@@ -190,14 +244,18 @@ class _AboutMeScreenState extends State<AboutMeScreen>
               border: Border.all(color: Colors.black26),
             ),
             child: Center(
-              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FaIcon(icon, color: Colors.purple, size: 20),
-                  Text(label,style:GoogleFonts.poppins(
+                  Text(
+                    label,
+                    style: GoogleFonts.poppins(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: Colors.purple,
-                    ),)
+                    ),
+                  ),
                 ],
               ),
             ),
