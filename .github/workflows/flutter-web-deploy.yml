@@ -35,3 +35,5 @@ jobs:
           folder: build/web
           token: ${{ secrets.GH_PAT }}  # Use Personal Access Token
           clean: true  # Removes old files before deploying
+# git commit -m "feat: Initial deployment of Flutter Web to GitHub Pages"
+# git push origin main --force
