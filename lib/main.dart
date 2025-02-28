@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'core/repositories/experience_repository.dart';
 import 'core/repositories/projects_repository.dart';
 import 'core/repositories/services_repository.dart';
-import 'presentation/screens/main_page.dart';
 import 'presentation/screens/splash_screen.dart';
 void main() {
   runApp(

@@ -86,7 +86,7 @@ class FooterSection extends StatelessWidget {
     return InkWell(
       onTap: () => _launchURL(url),
       borderRadius: BorderRadius.circular(50),
-      splashColor: Colors.purpleAccent.withOpacity(0.2),
+      splashColor: Colors.purpleAccent.withValues(alpha: 0.2),
       child: Tooltip(
         message: tooltip,
         child: Container(
@@ -97,7 +97,7 @@ class FooterSection extends StatelessWidget {
             border: Border.all(color: Colors.black12, width: 1.5), // Thin border
             boxShadow: [
               BoxShadow(
-                color: Colors.black12.withOpacity(0.1),
+                color: Colors.black12.withValues(alpha: 0.1),
                 blurRadius: 6,
                 offset: const Offset(0, 3),
               ),

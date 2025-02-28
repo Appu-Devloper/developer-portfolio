@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'main_page.dart'; // Import your MainPage
-import 'package:flutter/material.dart';
+import 'main_page.dart';
 
 class LogoPainter extends CustomPainter {
   @override

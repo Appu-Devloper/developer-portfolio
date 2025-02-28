@@ -148,7 +148,7 @@ class _MainPageState extends State<MainPage> {
                 _buildNavButton1("Services", _keys[2], 2),
                 _buildNavButton1("Work", _keys[3], 3),
                 _buildNavButton1("Skills", _keys[4], 4),
-                Container(height: 30,width: 120,
+                SizedBox(height: 30,width: 120,
                   child: OutlinedButton(
                     onPressed: _launchResumeURL,
                     style: OutlinedButton.styleFrom(
@@ -248,7 +248,7 @@ class _MainPageState extends State<MainPage> {
       child: InkWell(
         onTap: () { _scrollToSection(sectionKey);Navigator.pop(context);},
         borderRadius: BorderRadius.circular(8),
-        splashColor: Colors.purple.withOpacity(0.3),
+        splashColor: Colors.purple.withValues(alpha: 0.3),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -269,7 +269,7 @@ class _MainPageState extends State<MainPage> {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: Colors.purpleAccent.withOpacity(0.5),
+                          color: Colors.purpleAccent.withValues(alpha: 0.3),
                           blurRadius: 5,
                           offset: Offset(0, 3),
                         ),
