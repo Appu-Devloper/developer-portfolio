@@ -3,7 +3,7 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this if your default branch is different
+      - main  # Trigger deployment when pushing to main
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'  # Ensure you are using the latest stable version
+          flutter-version: '3.x'  # Use the latest stable Flutter version
 
       - name: Enable Flutter Web
         run: flutter config --enable-web
@@ -27,10 +27,11 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Deploy to GitHub Pages  # FIXED INDENTATION
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
+          branch: main  # Deploy directly to the main branch of appu-devloper.github.io
+          repository-name: Appu-Devloper/appu-devloper.github.io
           folder: build/web
           token: ${{ secrets.GH_PAT }}  # Use Personal Access Token
-          clean: true  # Clears old files before deploying
+          clean: true  # Removes old files before deploying
