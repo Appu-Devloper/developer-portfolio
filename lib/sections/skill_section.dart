@@ -38,7 +38,7 @@ class SkillSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SkillHeader(),
+            Center(child: SkillHeader()),
             const SizedBox(height: 20.0),
             ListView.builder(
               shrinkWrap: true,
