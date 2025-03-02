@@ -140,15 +140,17 @@ class _MainPageState extends State<MainPage> {
       endDrawer: MediaQuery.of(context).size.width <= 600
           ? Drawer(
               child: Column(
-               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+               mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                  
                  _buildNavButton1("Home", _keys[0], 0),
+                 SizedBox(height: 10),
                 _buildNavButton1("About", _keys[1], 1),
-                _buildNavButton1("Services", _keys[2], 2),
-                _buildNavButton1("Work", _keys[3], 3),
-                _buildNavButton1("Skills", _keys[4], 4),
-                SizedBox(height: 30,width: 120,
+SizedBox(height: 10),
+                _buildNavButton1("Services", _keys[2], 2),SizedBox(height: 10),
+                _buildNavButton1("Work", _keys[3], 3),SizedBox(height: 10),
+                _buildNavButton1("Skills", _keys[4], 4),SizedBox(height: 10),
+                SizedBox(width: 120,
                   child: OutlinedButton(
                     onPressed: _launchResumeURL,
                     style: OutlinedButton.styleFrom(
@@ -168,7 +170,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ),
-                SizedBox(width: 20),
+                
                 ],
               ),
             )
@@ -252,7 +254,7 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 120,height: 30,
+            Container(width: 120,height: 35,
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
