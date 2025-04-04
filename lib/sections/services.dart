@@ -58,7 +58,7 @@ class _ServicesScreenState extends State<ServicesScreen> with TickerProviderStat
               : Wrap(
                   spacing: 40.0,
                   runSpacing: 40.0,
-                  alignment: WrapAlignment.center,
+                  alignment: WrapAlignment.start,
                   children: services.map((service) => ServiceCard(service: service)).toList(),
                 ),
         ],

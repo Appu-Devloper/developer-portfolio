@@ -47,6 +47,7 @@ class _ServiceCardState extends State<ServiceCard> {
               SizedBox(height: 12),
               Text(
                 widget.service.title,
+                 textAlign: TextAlign.left,
                 style: GoogleFonts.montserrat(
                   color: Colors.black87,
                   fontWeight: FontWeight.w600,
@@ -56,7 +57,7 @@ class _ServiceCardState extends State<ServiceCard> {
               SizedBox(height: 8),
               Text(
                 widget.service.description,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 style: GoogleFonts.montserrat(
                   color: Colors.black87,
                   fontSize: 14,

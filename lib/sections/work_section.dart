@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -18,17 +18,20 @@ class WorkSection extends StatefulWidget {
 }
 
 class _WorkSectionState extends State<WorkSection> {
+  Set<int> visibleIndexes = {};
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => Provider.of<ProjectsProvider>(context, listen: false).fetchProjects());
+    Future.microtask(() =>
+        Provider.of<ProjectsProvider>(context, listen: false).fetchProjects());
   }
 
   @override
   Widget build(BuildContext context) {
     var projectsProvider = Provider.of<ProjectsProvider>(context);
     var projects = projectsProvider.projects;
-    
+
     return Center(
       child: Container(
         width: double.infinity,
@@ -59,24 +62,20 @@ class _WorkSectionState extends State<WorkSection> {
                   ),
                 ),
                 const SizedBox(height: 50.0),
-              projects.isEmpty
-    ? CircularProgressIndicator(color: Colors.blueAccent)
-    : Wrap(
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: isMobile ? 0 : 20.0,
-      runSpacing: 20.0,
-      children: List.generate(
-        projects.length,
-        (index) {
-          Widget projectBox = _buildProjectBox(projects[index], constraints, isMobile);
-    
-            return projectBox; // No animation if index ≠ activeIndex
-          }
-        
-      ),
-    ),
-ExperienceSection()
+                projects.isEmpty
+                    ? const CircularProgressIndicator(color: Colors.blueAccent)
+                    : Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: isMobile ? 0 : 20.0,
+                        runSpacing: 20.0,
+                        children: List.generate(projects.length, (index) {
+                          return _buildAnimatedProjectBox(
+                              projects[index], constraints, isMobile, index);
+                        }),
+                      ),
+                const SizedBox(height: 50),
+                const ExperienceSection(),
               ],
             );
           },
@@ -84,18 +83,55 @@ ExperienceSection()
       ),
     );
   }
-Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
-  return Container(
-   
-    width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
-    padding: const EdgeInsets.all(20),
-   decoration: BoxDecoration(
-        color: Colors.grey[100], // Light gray for smooth blending
-        border:  Border.all(
-          color: Colors.black12, width: 1, // Subtle top border
+
+  Widget _buildAnimatedProjectBox(
+      ProjectItem project, BoxConstraints constraints, bool isMobile, int index) {
+    bool isVisible = visibleIndexes.contains(index);
+
+    return VisibilityDetector(
+      key: Key('project-$index'),
+      onVisibilityChanged: (info) {
+        if (info.visibleFraction > 0.2 && !visibleIndexes.contains(index)) {
+          setState(() {
+            visibleIndexes.add(index);
+          });
+        }
+      },
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 600),
+        opacity: isVisible ? 1.0 : 0.0,
+        curve: Curves.easeOut,
+        child: AnimatedSlide(
+          duration: const Duration(milliseconds: 600),
+          offset: isVisible ? Offset.zero : const Offset(0, 0.1),
+          curve: Curves.easeOut,
+          child: _buildProjectBox(project, constraints, isMobile),
         ),
       ),
-    child: _buildProjectCard(project),
+    );
+  }
+
+Widget _buildProjectBox(ProjectItem project, BoxConstraints constraints, bool isMobile) {
+  return MouseRegion(
+    cursor: SystemMouseCursors.click,
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: isMobile ? double.infinity : (constraints.maxWidth / 2) - 20.0,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black12, width: 1),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(2, 4),
+          ),
+        ],
+      ),
+      child: _buildProjectCard(project),
+    ),
   );
 }
 

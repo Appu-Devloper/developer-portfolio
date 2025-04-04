@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _launchResumeURL() async {
-    const url = 'https://drive.google.com/file/d/1Qt69Vx4b0q1FYg70Yiiq2blsuvczrsLe/view';
+    const url = 'https://drive.google.com/file/d/1OsgwhMoAMdSRXodqqAC2kgUaai6Wz34P/view';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrlString(url);
     } else {
