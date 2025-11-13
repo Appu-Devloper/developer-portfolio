@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,72 +20,99 @@ class _ServiceCardState extends State<ServiceCard> {
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        width: 350,
-        height: 350,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-          border: isHovered ? Border.all(color: widget.service.color.withValues(alpha: 0.7), width: 2) : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              blurRadius: 15,
-              spreadRadius: -3,
-              offset: Offset(3, 3),
+      child: AnimatedScale(
+        scale: isHovered ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 250),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          constraints: const BoxConstraints(maxWidth: 340, minHeight: 340),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              colors: [
+                Colors.white,
+                widget.service.color.withValues(alpha: 0.12),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20),
+            border: Border.all(
+              color: widget.service.color.withValues(alpha: 0.4),
+              width: isHovered ? 1.8 : 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: widget.service.color.withValues(
+                  alpha: isHovered ? 0.35 : 0.15,
+                ),
+                blurRadius: isHovered ? 30 : 18,
+                offset: const Offset(0, 18),
+              ),
+            ],
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(widget.service.icon, size: 50, color: widget.service.color.withValues(alpha: 0.8)),
-              SizedBox(height: 12),
-              Text(
-                widget.service.title,
-                 textAlign: TextAlign.left,
-                style: GoogleFonts.montserrat(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24,
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: widget.service.color.withValues(alpha: 0.2),
+                ),
+                child: Icon(
+                  widget.service.icon,
+                  size: 32,
+                  color: widget.service.color.withValues(alpha: 0.9),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 18),
+              Text(
+                widget.service.title,
+                style: GoogleFonts.montserrat(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(height: 8),
               Text(
                 widget.service.description,
-                textAlign: TextAlign.left,
                 style: GoogleFonts.montserrat(
                   color: Colors.black87,
                   fontSize: 14,
-                  height: 1.5,
+                  height: 1.6,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 16),
               Wrap(
                 spacing: 10.0,
                 runSpacing: 10.0,
-                children: widget.service.features
-                    .map(
-                      (feature) => Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: widget.service.color.withValues(alpha:0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          feature,
-                          style: GoogleFonts.montserrat(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                children:
+                    widget.service.features
+                        .map(
+                          (feature) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: widget.service.color.withValues(
+                                alpha: 0.18,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              feature,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
-                    .toList(),
+                        )
+                        .toList(),
               ),
             ],
           ),

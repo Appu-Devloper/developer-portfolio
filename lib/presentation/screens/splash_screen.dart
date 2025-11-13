@@ -7,23 +7,35 @@ class LogoPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // **Gradient Shader for Ring & Letters**
     final Rect gradientRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final Paint gradientPaint = Paint()
-      ..shader = LinearGradient(
-        colors: [Colors.deepPurple, Colors.orangeAccent, Colors.blue, Colors.cyan],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(gradientRect)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5.0
-      ..strokeCap = StrokeCap.round;
+    final Paint gradientPaint =
+        Paint()
+          ..shader = LinearGradient(
+            colors: [
+              Colors.deepPurple,
+              Colors.orangeAccent,
+              Colors.blue,
+              Colors.cyan,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(gradientRect)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 5.0
+          ..strokeCap = StrokeCap.round;
 
     // **Outer Circle (Gradient Ring)**
-    final Paint ringPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [Colors.orangeAccent, Colors.deepPurple, Colors.blue, Colors.cyan],
-      ).createShader(gradientRect)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0;
+    final Paint ringPaint =
+        Paint()
+          ..shader = RadialGradient(
+            colors: [
+              Colors.orangeAccent,
+              Colors.deepPurple,
+              Colors.blue,
+              Colors.cyan,
+            ],
+          ).createShader(gradientRect)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 6.0;
 
     canvas.drawCircle(
       Offset(size.width / 2, size.height / 2),
@@ -56,7 +68,6 @@ class LogoPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -64,7 +75,8 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -78,9 +90,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       vsync: this,
     )..forward();
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Navigate to MainPage after 3 seconds
     Timer(const Duration(seconds: 5), () {
@@ -105,9 +118,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           child: SizedBox(
             width: 200,
             height: 200,
-            child: CustomPaint(
-              painter: LogoPainter(),
-            ),
+            child: CustomPaint(painter: LogoPainter()),
           ),
         ),
       ),

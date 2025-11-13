@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // Lets replace all static sizes
 const double kDesktopMaxWidth = 1000.0;
 const double kTabletMaxWidth = 760.0;

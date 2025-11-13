@@ -12,10 +12,13 @@ class FooterSection extends StatelessWidget {
       width: MediaQuery.sizeOf(context).width,
       padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
       decoration: BoxDecoration(
-        color: Colors.grey[100], // Light gray for smooth blending
-        border: const Border(
-          top: BorderSide(color: Colors.black12, width: 1), // Subtle top border
+        gradient: const LinearGradient(
+          colors: [Color(0xFFF8F2FF), Color(0xFFEFF6FF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,11 +75,7 @@ class FooterSection extends StatelessWidget {
           "Email",
           "mailto:appua0126@gmail.com",
         ),
-        _socialButton(
-          FontAwesomeIcons.phone,
-          "Phone",
-          "tel:+918861357375",
-        ),
+        _socialButton(FontAwesomeIcons.phone, "Phone", "tel:+918861357375"),
       ],
     );
   }
@@ -93,8 +92,9 @@ class FooterSection extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white, // White background for subtle contrast
-            border: Border.all(color: Colors.black12, width: 1.5), // Thin border
+            gradient: const LinearGradient(
+              colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12.withValues(alpha: 0.1),
@@ -103,7 +103,7 @@ class FooterSection extends StatelessWidget {
               ),
             ],
           ),
-          child: FaIcon(icon, color: Colors.black87, size: 22),
+          child: FaIcon(icon, color: Colors.white, size: 22),
         ),
       ),
     );

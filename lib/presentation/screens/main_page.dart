@@ -1,4 +1,5 @@
 import 'package:developer_portfolio/sections/work_section.dart';
+import 'package:developer_portfolio/presentation/widgets/animated_background.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -74,7 +75,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _launchResumeURL() async {
-    const url = 'https://drive.google.com/file/d/1OsgwhMoAMdSRXodqqAC2kgUaai6Wz34P/view';
+    const url =
+        'https://drive.google.com/file/d/1OsgwhMoAMdSRXodqqAC2kgUaai6Wz34P/view';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrlString(url);
     } else {
@@ -84,213 +86,365 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: Globals.scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        title: Text(
-          "<Appu M />",
-          style: GoogleFonts.alexBrush(
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: false,
-         actions: MediaQuery.of(context).size.width > 600
-            ? [
-                _buildNavButton("Home", _keys[0], 0),
-                _buildNavButton("About", _keys[1], 1),
-                _buildNavButton("Services", _keys[2], 2),
-                _buildNavButton("Work", _keys[3], 3),
-                _buildNavButton("Skills", _keys[4], 4),
-                OutlinedButton(
-                  onPressed: _launchResumeURL,
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    side: BorderSide(color: Colors.purple),
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  ),
-                  child: Text(
-                    "Resume",
-                    style: GoogleFonts.montserrat(
-                      color: Colors.purple,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 20),
-              ]
-            : [ Builder(
-  builder: (context) => IconButton(
-    icon: Icon(Icons.menu, color: Colors.black87),
-    onPressed: () {
-      Scaffold.of(context).openEndDrawer();
-    },
-  ),
-),
-]
-      ),
-      endDrawer: MediaQuery.of(context).size.width <= 600
-          ? Drawer(
+    final double width = MediaQuery.of(context).size.width;
+    final bool useDrawer = width < 860;
+
+    return AnimatedPortfolioBackground(
+      child: Scaffold(
+        key: Globals.scaffoldKey,
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: _buildGlassAppBar(context, useDrawer),
+        endDrawer: useDrawer ? _buildDrawer(context) : null,
+        body: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 24, 12, 48),
               child: Column(
-               mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 
-                 _buildNavButton1("Home", _keys[0], 0),
-                 SizedBox(height: 10),
-                _buildNavButton1("About", _keys[1], 1),
-SizedBox(height: 10),
-                _buildNavButton1("Services", _keys[2], 2),SizedBox(height: 10),
-                _buildNavButton1("Work", _keys[3], 3),SizedBox(height: 10),
-                _buildNavButton1("Skills", _keys[4], 4),SizedBox(height: 10),
-                SizedBox(width: 120,
-                  child: OutlinedButton(
-                    onPressed: _launchResumeURL,
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      side: BorderSide(color: Colors.purple),
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                    ),
-                    child: Text(
-                      "Resume",
-                      style: GoogleFonts.montserrat(
-                        color: Colors.purple,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
+                  Container(key: _keys[0], child: const HomeScreen()),
+                  Container(
+                    key: _keys[1],
+                    child: AboutMeScreen(index: 1, activeIndex: _activeIndex),
                   ),
-                ),
-                
+                  Container(
+                    key: _keys[2],
+                    child: ServicesScreen(index: 2, activeIndex: _activeIndex),
+                  ),
+                  Container(
+                    key: _keys[3],
+                    child: WorkSection(index: 3, activeIndex: _activeIndex),
+                  ),
+                  Container(
+                    key: _keys[4],
+                    child: SkillSection(index: 4, activeIndex: _activeIndex),
+                  ),
+                  const SizedBox(height: 50),
+                  const FooterSection(),
                 ],
               ),
-            )
-          : null,
-      
-      body: SingleChildScrollView(
-        controller: _scrollController,
+            ),
+          ),
+        ),
+        floatingActionButton: _buildScrollFab(),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildGlassAppBar(BuildContext context, bool useDrawer) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(86),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: AppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              toolbarHeight: 72,
+              backgroundColor: Colors.white.withValues(alpha: 0.85),
+              titleSpacing: 20,
+              leadingWidth: useDrawer ? 56 : 0,
+              leading:
+                  useDrawer
+                      ? IconButton(
+                        icon: const Icon(
+                          Icons.menu_rounded,
+                          color: Colors.black87,
+                        ),
+                        onPressed:
+                            () =>
+                                Globals.scaffoldKey.currentState
+                                    ?.openEndDrawer(),
+                      )
+                      : null,
+              title: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+                      ),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      "AM",
+                      style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Appu M",
+                        style: GoogleFonts.montserrat(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(
+                        "Software Development Engineer",
+                        style: GoogleFonts.montserrat(
+                          color: Colors.black54,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                if (!useDrawer) ...[
+                  _buildNavButton("Home", _keys[0], 0),
+                  _buildNavButton("About", _keys[1], 1),
+                  _buildNavButton("Services", _keys[2], 2),
+                  _buildNavButton("Work", _keys[3], 3),
+                  _buildNavButton("Skills", _keys[4], 4),
+                  _buildResumeButton(),
+                  const SizedBox(width: 12),
+                ] else
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: FilledButton.icon(
+                      onPressed: _launchResumeURL,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.deepPurple.shade400,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      icon: const Icon(Icons.picture_as_pdf_outlined),
+                      label: const Text("Resume"),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white.withValues(alpha: 0.95),
+      child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(key: _keys[0], child: HomeScreen()),
-            Container(
-              key: _keys[1],
-              child: AboutMeScreen(index: 1, activeIndex: _activeIndex),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Navigate",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Jump to any section instantly",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Container(
-              key: _keys[2],
-              child: ServicesScreen(index: 2, activeIndex: _activeIndex),
+            const Divider(height: 1),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  _buildDrawerNavButton("Home", _keys[0], 0),
+                  _buildDrawerNavButton("About", _keys[1], 1),
+                  _buildDrawerNavButton("Services", _keys[2], 2),
+                  _buildDrawerNavButton("Work", _keys[3], 3),
+                  _buildDrawerNavButton("Skills", _keys[4], 4),
+                ],
+              ),
             ),
-            Container(
-              key: _keys[3],
-              child: WorkSection(index: 3, activeIndex: _activeIndex),
-            ),
-            Container(
-              key: _keys[4],
-              child: SkillSection(index: 4, activeIndex: _activeIndex),
-            ),
-            
-           
-            SizedBox(height: 50),
-            FooterSection()
+            _buildResumeButton(expanded: true),
+            const SizedBox(height: 12),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _scrollToTop,
-        backgroundColor: Colors.black54,
-        child: Icon(Icons.arrow_upward, color: Colors.white),
+    );
+  }
+
+  Widget _buildResumeButton({bool expanded = false}) {
+    final button = ElevatedButton.icon(
+      onPressed: _launchResumeURL,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF6A11CB),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      icon: const Icon(Icons.picture_as_pdf_outlined, size: 18),
+      label: Text(
+        "Resume",
+        style: GoogleFonts.montserrat(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+        ),
+      ),
+    );
+
+    return Padding(
+      padding:
+          expanded
+              ? const EdgeInsets.fromLTRB(24, 8, 24, 20)
+              : const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: SizedBox(width: expanded ? double.infinity : null, child: button),
+    );
+  }
+
+  Widget _buildScrollFab() {
+    return FloatingActionButton.extended(
+      onPressed: _scrollToTop,
+      backgroundColor: Colors.deepPurple.shade400,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      icon: const Icon(Icons.arrow_upward_rounded, color: Colors.white),
+      label: Text(
+        "Back to top",
+        style: GoogleFonts.montserrat(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
   /// **Navigation Bar Buttons**
   Widget _buildNavButton(String label, GlobalKey sectionKey, int index) {
-    bool isSelected = _activeIndex == index;
+    final bool isSelected = _activeIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
       child: InkWell(
         onTap: () => _scrollToSection(sectionKey),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.montserrat(
-                color: Colors.black87,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+        borderRadius: BorderRadius.circular(999),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            color:
+                isSelected
+                    ? Colors.purple.withValues(alpha: 0.12)
+                    : Colors.transparent,
+            border: Border.all(
+              color:
+                  isSelected
+                      ? Colors.purple.withValues(alpha: 0.4)
+                      : Colors.transparent,
             ),
-            if (isSelected)
-              Container(
-                margin: EdgeInsets.only(top: 4),
-                height: 2,
-                width: 60,
-                color: Colors.purple,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.purple : Colors.black26,
+                  shape: BoxShape.circle,
+                ),
               ),
-          ],
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: GoogleFonts.montserrat(
+                  color: Colors.black87,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-   Widget _buildNavButton1(String label, GlobalKey sectionKey, int index) {
-    bool isSelected = _activeIndex == index;
+
+  Widget _buildDrawerNavButton(String label, GlobalKey sectionKey, int index) {
+    final bool isSelected = _activeIndex == index;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: InkWell(
-        onTap: () { _scrollToSection(sectionKey);Navigator.pop(context);},
-        borderRadius: BorderRadius.circular(8),
-        splashColor: Colors.purple.withValues(alpha: 0.3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(width: 120,height: 35,
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [Colors.deepPurple, Colors.purpleAccent]
-                      : [Colors.white, Colors.white],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                border: Border.all(
-                  color: isSelected?Colors.white: Colors.purple,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: Colors.purpleAccent.withValues(alpha: 0.3),
-                          blurRadius: 5,
-                          offset: Offset(0, 3),
-                        ),
-                      ]
-                    : [],
+        onTap: () {
+          Navigator.of(context).pop();
+          _scrollToSection(sectionKey);
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color:
+                isSelected
+                    ? Colors.deepPurple.withValues(alpha: 0.12)
+                    : Colors.white,
+            border: Border.all(
+              color: Colors.deepPurple.withValues(
+                alpha: isSelected ? 0.4 : 0.15,
               ),
-              child: Center(
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.bolt_rounded,
+                size: 18,
+                color: isSelected ? Colors.deepPurple : Colors.black54,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Text(
                   label,
                   style: GoogleFonts.montserrat(
-                    color: isSelected ? Colors.white : Colors.black87,
+                    color: Colors.black87,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
                   ),
                 ),
               ),
-            ),
-           
-          ],
+              const Icon(Icons.chevron_right_rounded, color: Colors.black45),
+            ],
+          ),
         ),
       ),
     );
